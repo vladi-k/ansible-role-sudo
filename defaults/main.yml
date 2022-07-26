@@ -1,0 +1,6 @@
+---
+sudo_packages:
+  - sudo
+
+sudo_visudo_path: /usr/sbin/visudo
+sudo_users: []

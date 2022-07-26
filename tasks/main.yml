@@ -1,0 +1,23 @@
+---
+- name: Install sudo packages
+  ansible.builtin.package:
+    name: "{{ sudo_packages }}"
+
+- name: Make sure sudoers.d exists
+  ansible.builtin.file:
+    path: /etc/sudoers.d
+    state: directory
+    owner: root
+    group: root
+    mode: 0750
+
+- name: Add custom sudoers.d entries
+  ansible.builtin.template:
+    src: etc/sudoers.d/from-ansible.j2
+    dest: "/etc/sudoers.d/from-ansible"
+    owner: root
+    group: root
+    mode: 0440
+    validate: "{{ sudo_visudo_path }} -c -f %s"
+  tags:
+    - sudo_users

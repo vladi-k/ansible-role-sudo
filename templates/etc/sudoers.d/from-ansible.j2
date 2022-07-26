@@ -1,0 +1,6 @@
+{{ ansible_managed | comment }}
+{% if sudo_users %}
+{% for user in sudo_users %}
+{{ user.name }} {{ user.hosts | default('ALL') }}=({{ user.runas | default('ALL') }}) {{ user.options | default('') }} {{ user.commands | default('ALL') }}
+{% endfor %}
+{% endif %}

@@ -6,27 +6,29 @@ Install and configure sudo.
 Requirements
 ------------
 
-* RHEL8
+* Tested on RHEL8
 
 Role Variables
 --------------
 
 * `sudo_packages` - list of sudo packages to install
-* `sudo_visudo_path` - path to visudo
-* `sudo_users` - list of sudo users, example:
+* `sudo_files` - list of sudo files to create, example:
 ```yaml
-sudo_users:
-  - name: zabbix
-    hosts: "{{ inventory_hostname }}"
+sudo_files:
+  - name: jsmith
+    user: jsmith
+    host: "{{ inventory_hostname }}"
     runas: root
-    options: "NOPASSWD:"
-    commands: /usr/sbin/smartctl
+    nopassword: true
+    commands: whoami
 ```
 
 Dependencies
 ------------
 
-N/A
+Collections:
+
+* `community.general` >= 6.3.0
 
 
 Example Playbook
@@ -35,12 +37,13 @@ Example Playbook
 ```yaml
 - hosts: my_servers
   vars:
-    sudo_users:
-      - name: zabbix
-        hosts: "{{ inventory_hostname }}"
+    sudo_files:
+      - name: jsmith
+        user: jsmith
+        host: "{{ inventory_hostname }}"
         runas: root
-        options: "NOPASSWD:"
-        commands: /usr/sbin/smartctl
+        nopassword: true
+        commands: whoami
   roles:
     - ansible-role-sudo
 ```

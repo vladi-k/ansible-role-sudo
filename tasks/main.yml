@@ -9,15 +9,21 @@
     state: directory
     owner: root
     group: root
-    mode: 0750
+    mode: '0750'
 
-- name: Add custom sudoers.d entries
-  ansible.builtin.template:
-    src: etc/sudoers.d/from-ansible.j2
-    dest: "/etc/sudoers.d/from-ansible"
-    owner: root
-    group: root
-    mode: 0440
-    validate: "{{ sudo_visudo_path }} -c -f %s"
+- name: Add custom sudoers.d files
+  community.general.sudoers:
+    commands: "{{ item.commands | default(omit) }}"
+    group: "{{ item.group | default(omit) }}"
+    host: "{{ item.host | default(omit) }}"
+    name: "{{ item.name }}"
+    nopassword: "{{ item.nopassword | default(omit) }}"
+    runas: "{{ item.runas | default(omit) }}"
+    setenv: "{{ item.setenv | default(omit) }}"
+    state: "{{ item.state | default(omit) }}"
+    sudoers_path: "{{ item.sudoers_path | default(omit) }}"
+    user: "{{ item.user | default(omit) }}"
+    validation: "{{ item.validation | default(omit) }}"
+  loop: "{{ sudo_files }}"
   tags:
-    - sudo_users
+    - sudo_files
